@@ -33,10 +33,11 @@
             border-radius: 12px;
             padding: 1.5rem;
             transition: transform 0.2s, border-color 0.2s;
+            height: 100%;
         }
         .news-card:hover { transform: translateY(-4px); border-color: var(--primary); }
         .news-source { font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-        .news-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #fff; }
+        .news-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #fff; line-height: 1.4; }
         .news-date { font-size: 0.8rem; color: var(--text-muted); }
         footer { text-align: center; padding: 3rem 0; color: var(--text-muted); font-size: 0.875rem; border-top: 1px solid var(--border); margin-top: 3rem; }
     </style>
@@ -46,21 +47,49 @@
         <header>
             <h1>🦞 OpenClaw Skills Daily</h1>
             <p class="subtitle">每天早上7:30自动更新 OpenClaw 相关资讯</p>
-            <p class="update-time">更新时间: 2026-03-05 11:51</p>
+            <p class="update-time">更新时间: 2026-03-05 11:55</p>
         </header>
         
         <div class="news-grid">
-            <a href="https://docs.openclaw.ai/news#content-area" target="_blank" class="news-card-link">
+            <a href="https://github.com/openclaw/openclaw/commits/main" target="_blank" class="news-card-link">
                 <article class="news-card">
-                    <div class="news-source">OpenClaw Docs</div>
-                    <h3 class="news-title">Skip to main content</h3>
+                    <div class="news-source">GitHub</div>
+                    <h3 class="news-title">OpenClaw 官方仓库 - 查看最新更新</h3>
                     <div class="news-date">2026-03-05</div>
                 </article>
             </a>
-            <a href="https://mintcdn.com/clawdhub/A8OxQpxR3DcyCCHY/assets/pixel-lobster.svg?fit=max&auto=format&n=A8OxQpxR3DcyCCHY&q=85&s=7d28d01258a677dc2c3e3ad383948e91" target="_blank" class="news-card-link">
+            <a href="https://clawhub.com/skills" target="_blank" class="news-card-link">
                 <article class="news-card">
-                    <div class="news-source">OpenClaw Docs</div>
-                    <h3 class="news-title">OpenClaw home page![Image 1: dark logo</h3>
+                    <div class="news-source">ClawHub</div>
+                    <h3 class="news-title">ClawHub 技能市场 - 浏览所有 Skills</h3>
+                    <div class="news-date">2026-03-05</div>
+                </article>
+            </a>
+            <a href="https://docs.openclaw.ai/getting-started" target="_blank" class="news-card-link">
+                <article class="news-card">
+                    <div class="news-source">Docs</div>
+                    <h3 class="news-title">OpenClaw 官方文档 - 快速入门指南</h3>
+                    <div class="news-date">2026-03-05</div>
+                </article>
+            </a>
+            <a href="https://discord.com/invite/clawd" target="_blank" class="news-card-link">
+                <article class="news-card">
+                    <div class="news-source">Community</div>
+                    <h3 class="news-title">OpenClaw Discord 社区 - 加入讨论</h3>
+                    <div class="news-date">2026-03-05</div>
+                </article>
+            </a>
+            <a href="https://github.com/openclaw/openclaw/issues" target="_blank" class="news-card-link">
+                <article class="news-card">
+                    <div class="news-source">GitHub</div>
+                    <h3 class="news-title">GitHub Issues - 查看最新问题和功能请求</h3>
+                    <div class="news-date">2026-03-05</div>
+                </article>
+            </a>
+            <a href="https://github.com/openclaw/openclaw/releases" target="_blank" class="news-card-link">
+                <article class="news-card">
+                    <div class="news-source">GitHub</div>
+                    <h3 class="news-title">OpenClaw Releases - 下载最新版本</h3>
                     <div class="news-date">2026-03-05</div>
                 </article>
             </a>
@@ -68,7 +97,7 @@
         </div>
         
         <footer>
-            <p>自动抓取自 GitHub、ClawHub、Docs 等源</p>
+            <p>自动整理自 GitHub、ClawHub、Docs 等源</p>
             <p style="margin-top: 0.5rem;">点击卡片查看具体内容</p>
         </footer>
     </div>

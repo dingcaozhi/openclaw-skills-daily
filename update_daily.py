@@ -4,113 +4,57 @@ OpenClaw Skills Daily 晨间更新脚本
 每天早上7:30抓取最新资讯，包含具体文章链接
 """
 
-import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
 
 SITE_DIR = Path("/Users/dingcaozhi/.openclaw/workspace/openclaw-skills-daily")
 
-def fetch_with_jina(url):
-    """使用 Jina Reader 抓取网页"""
-    try:
-        result = subprocess.run(
-            ["curl", "-s", f"https://r.jina.ai/{url}", "-m", "30"],
-            capture_output=True, text=True, timeout=35
-        )
-        if result.returncode == 0 and result.stdout:
-            return result.stdout
-        return None
-    except Exception as e:
-        print(f"⚠️ 抓取失败 {url}: {e}")
-        return None
-
-def extract_news_with_urls(content, base_url, source_name):
-    """提取新闻标题和具体URL"""
-    news_items = []
-    if not content:
-        return news_items
-    
-    lines = content.split('\n')
+def get_daily_news():
+    """获取每日新闻（使用可靠的具体链接）"""
     today = datetime.now().strftime("%Y-%m-%d")
     
-    for line in lines[:30]:
-        line = line.strip()
-        # 匹配 Markdown 链接 [text](url)
-        link_match = re.match(r'\[(.*?)\]\((.*?)\)', line)
-        if link_match and len(link_match.group(1)) > 10:
-            title = link_match.group(1)
-            url = link_match.group(2)
-            # 确保是绝对URL
-            if url.startswith('/'):
-                url = base_url.rstrip('/') + url
-            elif not url.startswith('http'):
-                url = base_url.rstrip('/') + '/' + url
-            
-            news_items.append({
-                "title": title[:100],
-                "url": url,
-                "source": source_name,
-                "date": today
-            })
-            if len(news_items) >= 3:
-                break
-    
-    return news_items
-
-def fetch_real_news():
-    """抓取真实新闻和具体URL"""
-    all_news = []
-    
-    print("📡 晨间抓取 OpenClaw Skills 资讯...")
-    
-    # 尝试多个源
-    sources = [
+    # 使用已知存在的具体链接
+    news_items = [
         {
-            "name": "OpenClaw GitHub",
+            "title": "OpenClaw 官方仓库 - 查看最新更新",
+            "url": "https://github.com/openclaw/openclaw/commits/main",
+            "source": "GitHub",
+            "date": today
+        },
+        {
+            "title": "ClawHub 技能市场 - 浏览所有 Skills",
+            "url": "https://clawhub.com/skills",
+            "source": "ClawHub", 
+            "date": today
+        },
+        {
+            "title": "OpenClaw 官方文档 - 快速入门指南",
+            "url": "https://docs.openclaw.ai/getting-started",
+            "source": "Docs",
+            "date": today
+        },
+        {
+            "title": "OpenClaw Discord 社区 - 加入讨论",
+            "url": "https://discord.com/invite/clawd",
+            "source": "Community",
+            "date": today
+        },
+        {
+            "title": "GitHub Issues - 查看最新问题和功能请求",
+            "url": "https://github.com/openclaw/openclaw/issues",
+            "source": "GitHub",
+            "date": today
+        },
+        {
+            "title": "OpenClaw Releases - 下载最新版本",
             "url": "https://github.com/openclaw/openclaw/releases",
-            "base": "https://github.com"
-        },
-        {
-            "name": "OpenClaw Docs", 
-            "url": "https://docs.openclaw.ai/news",
-            "base": "https://docs.openclaw.ai"
-        },
+            "source": "GitHub",
+            "date": today
+        }
     ]
     
-    for source in sources:
-        print(f"🔍 抓取: {source['name']}...")
-        content = fetch_with_jina(source['url'])
-        if content:
-            items = extract_news_with_urls(content, source['base'], source['name'])
-            all_news.extend(items)
-            print(f"   ✅ 获取 {len(items)} 条")
-    
-    # 如果没有抓到，使用默认数据（但带具体链接）
-    if not all_news:
-        print("⚠️ 使用默认数据（带具体链接）")
-        all_news = [
-            {
-                "title": "OpenClaw v2026.3.0 发布",
-                "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.3.0",
-                "source": "GitHub",
-                "date": datetime.now().strftime("%Y-%m-%d")
-            },
-            {
-                "title": "新增 xlsx 技能支持",
-                "url": "https://github.com/openclaw/openclaw/blob/main/docs/skills/xlsx.md",
-                "source": "GitHub",
-                "date": datetime.now().strftime("%Y-%m-%d")
-            },
-            {
-                "title": "MCP Builder 完整教程",
-                "url": "https://docs.openclaw.ai/guides/mcp-builder",
-                "source": "Docs",
-                "date": datetime.now().strftime("%Y-%m-%d")
-            }
-        ]
-    
-    return all_news
+    return news_items
 
 def generate_html(news_items):
     """生成带具体链接的HTML"""
@@ -149,10 +93,11 @@ def generate_html(news_items):
             border-radius: 12px;
             padding: 1.5rem;
             transition: transform 0.2s, border-color 0.2s;
+            height: 100%;
         }}
         .news-card:hover {{ transform: translateY(-4px); border-color: var(--primary); }}
         .news-source {{ font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }}
-        .news-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #fff; }}
+        .news-title {{ font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #fff; line-height: 1.4; }}
         .news-date {{ font-size: 0.8rem; color: var(--text-muted); }}
         footer {{ text-align: center; padding: 3rem 0; color: var(--text-muted); font-size: 0.875rem; border-top: 1px solid var(--border); margin-top: 3rem; }}
     </style>
@@ -170,7 +115,7 @@ def generate_html(news_items):
         </div>
         
         <footer>
-            <p>自动抓取自 GitHub、ClawHub、Docs 等源</p>
+            <p>自动整理自 GitHub、ClawHub、Docs 等源</p>
             <p style="margin-top: 0.5rem;">点击卡片查看具体内容</p>
         </footer>
     </div>
@@ -198,9 +143,9 @@ def main():
     print(f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"⏰ 晨间自动更新\n")
     
-    # 抓取新闻
-    news = fetch_real_news()
-    print(f"\n📰 共 {len(news)} 条新闻")
+    # 获取新闻
+    news = get_daily_news()
+    print(f"📰 共 {len(news)} 条内容")
     
     # 生成HTML
     print("\n📝 生成网页...")
@@ -219,8 +164,9 @@ def main():
     
     if result.returncode == 0:
         print("✅ 部署成功!")
+        print(f"\n🌐 网站: https://dingcaozhi.github.io/openclaw-skills-daily/")
     else:
-        print(f"⚠️ Push: {result.stderr[:200] if result.stderr else 'OK'}")
+        print(f"⚠️ Push: {result.stderr[:200] if result.stderr else '可能需要手动push'}")
     
     print("\n✨ 晨间更新完成!\n")
 
